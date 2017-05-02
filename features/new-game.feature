@@ -14,6 +14,7 @@ Scenario: Play new game
     And 2 tiles should be added at random to the playing field
 
 Scenario: Try again
+    Given game is over
     When player has clicked 'Try again' button
     Then playing field should be cleared
     And score should be reset to 0

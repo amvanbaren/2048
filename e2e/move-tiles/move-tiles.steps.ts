@@ -7,57 +7,48 @@ import { CallbackStepDefinition } from 'cucumber';
 @binding()
 export class MoveTilesSteps {
 
-    @given(/^there are possible moves left$/) 
+    @given(/^there are possible moves left$/)
     private givenThereArePossibleMovesLeft (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @when(/^player presses the \'up\' arrow key$/) 
+    @when(/^player presses the \'up\' arrow key$/)
     private whenPlayerPressesTheUpArrowKey (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^all tiles on the playing field should move up$/) 
+    @then(/^all tiles on the playing field should move up$/)
     private thenAllTilesOnThePlayingFieldShouldMoveUp (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @when(/^player presses the \'down\' arrow key$/) 
+    @when(/^player presses the \'down\' arrow key$/)
     private whenPlayerPressesTheDownArrowKey (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^all tiles on the playing field should move down$/) 
+    @then(/^all tiles on the playing field should move down$/)
     private thenAllTilesOnThePlayingFieldShouldMoveDown (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @when(/^player presses the \'left\' arrow key$/) 
+    @when(/^player presses the \'left\' arrow key$/)
     private whenPlayerPressesTheLeftArrowKey (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^all tiles on the playing field should move left$/) 
+    @then(/^all tiles on the playing field should move left$/)
     private thenAllTilesOnThePlayingFieldShouldMoveLeft (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @when(/^player presses the \'right\' arrow key$/) 
+    @when(/^player presses the \'right\' arrow key$/)
     private whenPlayerPressesTheRightArrowKey (callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^all tiles on the playing field should move right$/) 
+    @then(/^all tiles on the playing field should move right$/)
     private thenAllTilesOnThePlayingFieldShouldMoveRight(callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

@@ -8,14 +8,12 @@ import { CallbackStepDefinition } from 'cucumber';
 export class TopScoreSteps {
 
     @when(/^the current game score is higher than the top score$/)
-    private whenTheCurrentGameScoreIsHigherThanTheTopScore (callback) {
+    private whenTheCurrentGameScoreIsHigherThanTheTopScore (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @then(/^the top score value should become the current game score value$/)
-    private thenTheTopScoreValueShouldBecomeTheCurrentGameScoreValue (callback) {
+    private thenTheTopScoreValueShouldBecomeTheCurrentGameScoreValue (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

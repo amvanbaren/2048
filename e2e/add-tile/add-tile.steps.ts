@@ -8,32 +8,26 @@ import { CallbackStepDefinition } from 'cucumber';
 export class AddTileSteps {
 
     @given(/^there is an empty tile on the playing field$/)
-    private givenThereIsAnEmptyTileOnThePlayingField (callback) {
+    private givenThereIsAnEmptyTileOnThePlayingField (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @when(/^a player move has ended$/)
-    private whenAPlayerMoveHasEnded (callback) {
+    private whenAPlayerMoveHasEnded (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @then(/^a new tile is added at random to an empty tile on the playing field$/)
-    private thenANewTileIsAddedAtRandomToAnEmptyTileOnThePlayingField (callback) {
+    private thenANewTileIsAddedAtRandomToAnEmptyTileOnThePlayingField (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^{int}% of the time the new tile\'s value is {int}$/) 
-    private thenXNumberOfTheTimeTheNewTilesValueIsNumber (int, int2, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
-    }
+    @then(/^the new tile's value is either (\d+) or (\d+)$/)
+    private thenTheNewTilesValueIsEitherXorY (
+        expectedTileValue1: number,
+        expectedTileValue2: number,
+        callback: CallbackStepDefinition) {
 
-    @then(/^{int}% of the time the new tile\'s value is {int}$/) 
-    private thenYNumberOfTheTimeTheNewTilesValueIsNumber (int, int2, callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

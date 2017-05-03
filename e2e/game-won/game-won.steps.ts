@@ -7,27 +7,25 @@ import { CallbackStepDefinition } from 'cucumber';
 @binding()
 export class GameWonSteps {
 
-    @when(/^there is a tile with value {int} present on the playing field$/) 
-    private whenThereIsATileWithValueXPresentOnThePlayingField (int, callback) {
+    @when(/^there is a tile with value (\d+) present on the playing field$/)
+    private whenThereIsATileWithValueXPresentOnThePlayingField (
+        expectedTileValue: number, 
+        callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^playing field should become greyed out$/) 
-    private thenPlayingFieldShouldBecomeGreyedOut (callback) {
+    @then(/^playing field should become greyed out$/)
+    private thenPlayingFieldShouldBecomeGreyedOut (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^on top of the playing field \'You win!\' should be displayed$/) 
-    private thenOnTopOfThePlayingFieldYouWinShouldBeDisplayed (callback) {
+    @then(/^on top of the playing field \'You win!\' should be displayed$/)
+    private thenOnTopOfThePlayingFieldYouWinShouldBeDisplayed (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^below the \'You win!\' text a \'New game\' button should be displayed$/) 
-    private thenBelowTheYouWinTextANewGameButtonShouldBeDisplayed (callback) {
+    @then(/^below the \'You win!\' text a \'New game\' button should be displayed$/)
+    private thenBelowTheYouWinTextANewGameButtonShouldBeDisplayed (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

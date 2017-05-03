@@ -8,56 +8,53 @@ import { CallbackStepDefinition } from 'cucumber';
 export class NewGameSteps {
 
     @when(/^initial page load has completed$/)
-    private whenInitialPageLoadHasCompleted (callback) {
+    private whenInitialPageLoadHasCompleted (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^score should be {int}$/)
-    private thenScoreShouldBeZero (int, callback) {
+    @then(/^score should be (\d+)$/)
+    private thenScoreShouldBeZero (expectedScore: number, callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^an empty playing field of {int} by {int} tiles should be visible$/)
-    private thenAnEmptyPlayingFieldOf4By4TilesShouldBeVisible (int, int2, callback) {
+    @then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/)
+    private thenAnEmptyPlayingFieldOfXByYTilesShouldBeVisible (
+        expectedTilesX: number,
+        expectedTilesY: number,
+        callback: CallbackStepDefinition) {
+
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
-    
-    @then(/^{int} tiles should be added at random to the playing field$/)
-    private then2TilesShouldBeAddedAtRandomToThePlayingField (int, callback) {
+
+    @then(/^(\d+) tiles should be added at random to the playing field$/)
+    private thenXTilesShouldBeAddedAtRandomToThePlayingField (
+        expectedNumberOfTiles: number,
+        callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @when(/^player has clicked \'New game\' button$/)
-    private whenPlayerHasClickedNewGameButton (callback) {
+    private whenPlayerHasClickedNewGameButton (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @then(/^playing field should be cleared$/)
-    private thenPlayingFieldShouldBeCleared (callback) {
+    private thenPlayingFieldShouldBeCleared (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
-    
-    @then(/^score should be reset to {int}$/)
-    private thenScoreShouldBeResetToZero (int, callback) {
+
+    @then(/^score should be reset to (\d+)$/)
+    private thenScoreShouldBeResetToX (expectedScore: number, callback) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @given(/^game is over$/)
-    private giveGameIsOver (callback) {
+    private giveGameIsOver (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
     @when(/^player has clicked \'Try again\' button$/)
-    private whenPlayerHasClickedTryAgainButton (callback) {
+    private whenPlayerHasClickedTryAgainButton (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

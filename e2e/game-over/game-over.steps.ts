@@ -7,27 +7,23 @@ import { CallbackStepDefinition } from 'cucumber';
 @binding()
 export class GameOverSteps {
 
-    @when(/^there are no possible moves left$/) 
-    private whenThereAreNoPossibleMovesLeft (callback) {
+    @when(/^there are no possible moves left$/)
+    private whenThereAreNoPossibleMovesLeft (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^playing field should become greyed out$/) 
-    private thenPlayingFieldShouldBecomeGreyedOut (callback) {
+    @then(/^playing field should become greyed out$/)
+    private thenPlayingFieldShouldBecomeGreyedOut (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^on top of the playing field \'Game over!\' should be displayed$/) 
-    private thenOnTopOfThePlayingFieldGameOverShouldBeDisplayed (callback) {
+    @then(/^on top of the playing field \'Game over!\' should be displayed$/)
+    private thenOnTopOfThePlayingFieldGameOverShouldBeDisplayed (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 
-    @then(/^below the \'Game over!\' text a \'Try again\' button should be displayed$/) 
-    private thenBelowTheGameOverTextATryAgainButtonShouldBeDisplayed (callback) {
+    @then(/^below the \'Game over!\' text a \'Try again\' button should be displayed$/)
+    private thenBelowTheGameOverTextATryAgainButtonShouldBeDisplayed (callback: CallbackStepDefinition) {
         // Write code here that turns the phrase above into concrete actions
-        callback(null, 'pending');
     }
 }

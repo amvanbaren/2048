@@ -1,4 +1,7 @@
-import { browser, promise, element, by, protractor, ElementFinder } from 'protractor';
+import { browser, promise, element, by, until, protractor, ElementFinder } from 'protractor';
+
+const chai = require('chai').use(require('chai-as-promised'));
+const expect = chai.expect;
 
 export class GamePage {
     private playingField: ElementFinder;
@@ -11,13 +14,8 @@ export class GamePage {
         return browser.get('/');
     }
 
-    waitReady() {
-        browser.wait(expect(this.playingField.isPresent()).toBeTruthy, 5000);
-    }
-
-    getScore(): number {
-        const scoreText = element(by.id('score')).getText();
-        return Number(scoreText);
+    getScore(): promise.Promise<number> {
+        return element(by.id('score')).getText().then(Number.parseInt);
     }
 
     moveUp() {

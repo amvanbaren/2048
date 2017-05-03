@@ -1,15 +1,24 @@
 import { browser } from 'protractor';
-import { defineSupportCode } from 'cucumber';
+import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
+import { GamePage } from '../game.page';
+
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
 defineSupportCode(({Given, When, Then}) => {
+    const gamePage = new GamePage();
 
-    Given(/^player has navigated to the game page$/, () => {});
+    Given(/^player has navigated to the game page$/, (callback: CallbackStepDefinition) => {
+        gamePage.navigateTo()
+                .then(callback);
+    });
 
-    When(/^initial page load has completed$/, () => {});
-
-    Then(/^score should be (\d+)$/, (expectedScore: number) => {});
+    Then(/^score should be (\d+)$/, (expectedScore: number, callback: CallbackStepDefinition) => {
+        gamePage.getScore().then((s) => {
+            expect(s).to.be.equal(expectedScore);
+            callback();
+        });
+    });
 
     Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, (expectedTilesX: number, expectedTilesY: number) => {});
 

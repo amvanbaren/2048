@@ -3,7 +3,6 @@ Feature: Play new game
 
 Scenario: Initial page load
     Given player has navigated to the game page
-    When initial page load has completed
     Then score should be 0
     And an empty playing field of 4 by 4 tiles should be visible 
     And 2 tiles should be added at random to the playing field

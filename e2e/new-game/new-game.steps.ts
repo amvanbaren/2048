@@ -1,60 +1,27 @@
+import { browser } from 'protractor';
+import { defineSupportCode } from 'cucumber';
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-import { binding, given, when, then } from 'cucumber-tsflow';
-import { CallbackStepDefinition } from 'cucumber';
+defineSupportCode(({Given, When, Then}) => {
 
-@binding()
-export class NewGameSteps {
+    Given(/^player has navigated to the game page$/, () => {});
 
-    @when(/^initial page load has completed$/)
-    private whenInitialPageLoadHasCompleted (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^initial page load has completed$/, () => {});
 
-    @then(/^score should be (\d+)$/)
-    private thenScoreShouldBeZero (expectedScore: number, callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^score should be (\d+)$/, (expectedScore: number) => {});
 
-    @then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/)
-    private thenAnEmptyPlayingFieldOfXByYTilesShouldBeVisible (
-        expectedTilesX: number,
-        expectedTilesY: number,
-        callback: CallbackStepDefinition) {
+    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, (expectedTilesX: number, expectedTilesY: number) => {});
 
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^(\d+) tiles should be added at random to the playing field$/, (expectedTiles: number) => {});
 
-    @then(/^(\d+) tiles should be added at random to the playing field$/)
-    private thenXTilesShouldBeAddedAtRandomToThePlayingField (
-        expectedNumberOfTiles: number,
-        callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^player has clicked \'New game\' button$/, () => {});
 
-    @when(/^player has clicked \'New game\' button$/)
-    private whenPlayerHasClickedNewGameButton (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^playing field should be cleared$/, () => {});
 
-    @then(/^playing field should be cleared$/)
-    private thenPlayingFieldShouldBeCleared (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^score should be reset to (\d+)$/, (expectedScore: number) => {});
 
-    @then(/^score should be reset to (\d+)$/)
-    private thenScoreShouldBeResetToX (expectedScore: number, callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Given(/^game is over$/, () => {});
 
-    @given(/^game is over$/)
-    private giveGameIsOver (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
-
-    @when(/^player has clicked \'Try again\' button$/)
-    private whenPlayerHasClickedTryAgainButton (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
-}
+    When(/^player has clicked \'Try again\' button$/, () => {});
+});

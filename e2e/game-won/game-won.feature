@@ -4,6 +4,6 @@ Feature: Game won
 
     Scenario: Game won
     When there is a tile with value 2048 present on the playing field
-    Then playing field should become greyed out
+    Then a yellow overlay is displayed on top of the playing field
     And on top of the playing field 'You win!' should be displayed
     And below the 'You win!' text a 'New game' button should be displayed

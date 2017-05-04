@@ -1,4 +1,4 @@
-import { browser, promise, element, by, until, protractor, ElementFinder } from 'protractor';
+import { browser, promise, element, by, until, protractor, ElementFinder} from 'protractor';
 
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
@@ -16,6 +16,10 @@ export class GamePage {
 
     getScore(): promise.Promise<number> {
         return element(by.id('score')).getText().then(Number.parseInt);
+    }
+
+    getPlayingField(): ElementFinder {
+        return this.playingField;
     }
 
     moveUp() {

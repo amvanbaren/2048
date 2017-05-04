@@ -1,4 +1,4 @@
-import { browser } from 'protractor';
+import { browser, by, promise, WebElement } from 'protractor';
 import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
 import { GamePage } from '../game.page';
 
@@ -20,9 +20,36 @@ defineSupportCode(({Given, When, Then}) => {
         });
     });
 
-    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, (expectedTilesX: number, expectedTilesY: number) => {});
+    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, 
+        (expectedTilesX: number, expectedTilesY: number, callback: CallbackStepDefinition) => {
 
-    Then(/^(\d+) tiles should be added at random to the playing field$/, (expectedTiles: number) => {});
+        gamePage.getPlayingField().getWebElement().findElements(by.className('row')).then((r) => {
+            expect(r.length).to.be.equal(expectedTilesY);
+
+            const promises = [];
+            r.forEach((i) => {
+                const promise = i.findElements(by.css('[class^=col-]')).then((c) => {
+                    expect(c.length).to.be.equal(expectedTilesX);
+                });
+
+                promises.push(promise);
+            });
+
+            Promise.all(promises).then(() => {
+                callback();
+            });
+        });
+    });
+
+    Then(/^(\d+) tiles should be added at random to the playing field$/,
+        (expectedTiles: number, callback: CallbackStepDefinition) => {
+
+        // TODO: test this multiple times to ensure the tiles are added at random to the playing field
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile > p')).then((t) => {
+            expect(t.length).to.be.equal(expectedTiles);
+            callback();
+        });
+    });
 
     When(/^player has clicked \'New game\' button$/, () => {});
 

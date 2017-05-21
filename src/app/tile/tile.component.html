@@ -1,3 +1,3 @@
-<div class="panel tile" [ngStyle]="{'background-color': tile.color}">
-    <p class="text-center" *ngIf="tile.value > 0">{{tile.value}}</p>
+<div class="panel tile" [attr.tile]="tile">
+    <p class="text-center" *ngIf="tile > 0">{{tile}}</p>
 </div>

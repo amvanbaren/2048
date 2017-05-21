@@ -1,6 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import * as Chance from 'chance';
 import { Point } from './point';
+import { Direction } from './direction';
+import { Matrix } from './matrix';
 
 @Component({
   selector: 'app-playing-field',
@@ -12,12 +14,13 @@ export class PlayingFieldComponent implements OnInit {
   private rows = 4;
   private columns = 4;
   private chance;
-  private colorPicker;
+  private matrix;
 
   tiles: number[][];
 
   constructor() {
     this.chance = new Chance();
+    this.matrix = new Matrix();
     this.tiles = [];
 
     Array.from(Array(this.rows), () => {
@@ -36,85 +39,134 @@ export class PlayingFieldComponent implements OnInit {
 
   @HostListener('window:keyup.arrowup')
   moveUp() {
-    Array.from(Array(this.rows), (c, i) => {
-      Array.from(Array(this.columns), (r, j) => {
-        const index = this.rows - i - 1; // reverse the index
-        if (index > 0) {
-          const oneUp = index - 1;
-          if (this.tiles[oneUp][j] === this.empty) {
-            const value = this.tiles[index][j];
-            this.updateTile(new Point(oneUp, j), value);
-            this.updateTile(new Point(index, j), this.empty);
-          }
-        }
-      });
-    });
-
-    this.addRandomTiles(1);
+    this.move(Direction.Up);
   }
 
   @HostListener('window:keyup.arrowdown')
   moveDown() {
-      Array.from(Array(this.rows), (c, i) => {
-      Array.from(Array(this.columns), (r, j) => {
-        const index = i;
-        if (index < this.rows - 1) {
-          const oneDown = index + 1;
-          if (this.tiles[oneDown][j] === this.empty) {
-            const value = this.tiles[index][j];
-            this.updateTile(new Point(oneDown, j), value);
-            this.updateTile(new Point(index, j), this.empty);
-          }
-        }
-      });
-    });
-
-    this.addRandomTiles(1);
+    this.move(Direction.Down);
   }
 
   @HostListener('window:keyup.arrowleft')
-  moveLeft(){
-      Array.from(Array(this.rows), (c, i) => {
-      Array.from(Array(this.columns), (r, j) => {
-        const index = this.columns - j - 1; // reverse the index
-        if (index > 0) {
-          const oneLeft = index - 1;
-          if (this.tiles[i][oneLeft] === this.empty) {
-            const value = this.tiles[i][index];
-            this.updateTile(new Point(i, oneLeft), value);
-            this.updateTile(new Point(i, index), this.empty);
-          }
-        }
-      });
-    });
-
-    this.addRandomTiles(1);
+  moveLeft() {
+    this.move(Direction.Left);
   }
 
   @HostListener('window:keyup.arrowright')
-  moveRight(){
-      Array.from(Array(this.rows), (c, i) => {
+  moveRight() {
+    this.move(Direction.Right);
+  }
+
+  private move(direction: Direction) {
+    // copy tiles
+    let tiles: number[][] = [];
+    this.tiles.forEach(r => {
+      tiles.push(r.slice(0));
+    });
+
+    let degrees: number;
+    switch (direction) {
+      case Direction.Up:
+        degrees = 0;
+        break;
+      case Direction.Down:
+        degrees = 180;
+        break;
+      case Direction.Left:
+        degrees = 270;
+        break;
+      case Direction.Right:
+        degrees = 90;
+        break;
+    }
+
+    tiles = this.matrix.rotate(tiles, degrees);
+    console.log(JSON.stringify(tiles));
+
+    // up
+    Array.from(Array(this.rows - 1), (c, i) => {
+      // start with the second row
+      const index = i + 1;
       Array.from(Array(this.columns), (r, j) => {
-        const index = j;
-        if (index < this.columns - 1) {
-          const oneRight = index + 1;
-          if (this.tiles[i][oneRight] === this.empty) {
-            const value = this.tiles[i][index];
-            this.updateTile(new Point(i, oneRight), value);
-            this.updateTile(new Point(i, index), this.empty);
+        let u;
+        // move tiles
+        for (u = 0; u < index; u++) {
+          if (tiles[u][j] === this.empty) {
+            const value = tiles[index][j];
+            tiles[index][j] = this.empty;
+            tiles[u][j] = value;
+            break;
           }
+        }
+        // merge tiles
+        if (u > 0 && tiles[u - 1][j] === tiles[u][j]) {
+          tiles[u - 1][j] *= 2;
+          tiles[u][j] = this.empty;
         }
       });
     });
 
-    this.addRandomTiles(1);
+    // rotate the tiles back
+    degrees = 360 - degrees;
+    tiles = this.matrix.rotate(tiles, degrees);
+    console.log(JSON.stringify(tiles));
+
+    let equal = true;
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.columns; j++) {
+        if (this.tiles[i][j] !== tiles[i][j]) {
+          equal = false;
+          break;
+        }
+      }
+
+      if (!equal) {
+        break;
+      }
+    }
+
+    if (!equal) {
+      this.tiles.length = 0;
+      tiles.forEach(r => {
+        this.tiles.push(r.slice(0));
+      });
+
+      this.addRandomTiles(1);
+    }
   }
 
-  private addRandomTiles(count: number){
+  private rotate(tiles: number[][], degrees: number): number[][] {
+    const newTiles = [];
+    tiles.forEach(r => {
+      newTiles.push(r.slice(0));
+    });
+    console.log(JSON.stringify(newTiles));
+    const offsetX = degrees === 270 ? 0 : 3;
+    const offsetY = degrees === 90 ? 0 : 3;
+    const rad = this.degreesToRadians(degrees);
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    Array.from(Array(this.rows), (c, y) => {
+      Array.from(Array(this.columns), (r, x) => {
+        const newX = Math.floor(x * cos - y * sin + offsetX);
+        const newY = Math.floor(x * sin + y * cos + offsetY);
+        console.log('new x: ' + newX + ' new y: ' + newY + '[' + x + ',' + y + ']');
+        newTiles[newY][newX] = tiles[y][x];
+      });
+    });
+
+    return newTiles;
+  }
+
+  private degreesToRadians(degrees: number) {
+    return degrees * (Math.PI / 180);
+  }
+
+  private addRandomTiles(count: number) {
     const emptyTiles = [];
     this.tiles.forEach((r, i) => {
       r.forEach((t, j) => {
-        if (t === this.empty){
+        if (t === this.empty) {
           emptyTiles.push(new Point(i, j));
         }
       });
@@ -126,13 +178,9 @@ export class PlayingFieldComponent implements OnInit {
     }
 
     randomTiles.forEach((p) => {
-      const val = chance.integer({min: 0, max: 9}) === 0 ? 4 : 2;
+      const val = chance.integer({ min: 0, max: 9 }) === 0 ? 4 : 2;
 
-      this.updateTile(p, val);
+      this.tiles[p.getX()][p.getY()] = val;
     });
-  }
-
-  private updateTile(point: Point, value: number) {
-    this.tiles[point.getX()][point.getY()] = value;
   }
 }

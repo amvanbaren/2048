@@ -3,6 +3,7 @@ import * as Chance from 'chance';
 import { Point } from './point';
 import { Direction } from './direction';
 import { Matrix } from './matrix';
+import { ScoreboardService } from '../scoreboard.service';
 
 @Component({
   selector: 'app-playing-field',
@@ -13,12 +14,14 @@ export class PlayingFieldComponent implements OnInit {
   private empty = 0;
   private rows = 4;
   private columns = 4;
+  private scoreBoardService: ScoreboardService;
   private chance;
   private matrix;
 
   tiles: number[][];
 
-  constructor() {
+  constructor(scoreBoardService: ScoreboardService) {
+    this.scoreBoardService = scoreBoardService;
     this.chance = new Chance();
     this.matrix = new Matrix();
     this.tiles = [];
@@ -81,7 +84,6 @@ export class PlayingFieldComponent implements OnInit {
     }
 
     tiles = this.matrix.rotate(tiles, degrees);
-    console.log(JSON.stringify(tiles));
 
     // up
     Array.from(Array(this.rows - 1), (c, i) => {
@@ -100,8 +102,11 @@ export class PlayingFieldComponent implements OnInit {
         }
         // merge tiles
         if (u > 0 && tiles[u - 1][j] === tiles[u][j]) {
-          tiles[u - 1][j] *= 2;
+          const value = tiles[u - 1][j] * 2;
+          tiles[u - 1][j] = value;
           tiles[u][j] = this.empty;
+
+          this.scoreBoardService.changeScore(value);
         }
       });
     });
@@ -109,7 +114,6 @@ export class PlayingFieldComponent implements OnInit {
     // rotate the tiles back
     degrees = 360 - degrees;
     tiles = this.matrix.rotate(tiles, degrees);
-    console.log(JSON.stringify(tiles));
 
     let equal = true;
     for (let i = 0; i < this.rows; i++) {
@@ -133,33 +137,6 @@ export class PlayingFieldComponent implements OnInit {
 
       this.addRandomTiles(1);
     }
-  }
-
-  private rotate(tiles: number[][], degrees: number): number[][] {
-    const newTiles = [];
-    tiles.forEach(r => {
-      newTiles.push(r.slice(0));
-    });
-    console.log(JSON.stringify(newTiles));
-    const offsetX = degrees === 270 ? 0 : 3;
-    const offsetY = degrees === 90 ? 0 : 3;
-    const rad = this.degreesToRadians(degrees);
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    Array.from(Array(this.rows), (c, y) => {
-      Array.from(Array(this.columns), (r, x) => {
-        const newX = Math.floor(x * cos - y * sin + offsetX);
-        const newY = Math.floor(x * sin + y * cos + offsetY);
-        console.log('new x: ' + newX + ' new y: ' + newY + '[' + x + ',' + y + ']');
-        newTiles[newY][newX] = tiles[y][x];
-      });
-    });
-
-    return newTiles;
-  }
-
-  private degreesToRadians(degrees: number) {
-    return degrees * (Math.PI / 180);
   }
 
   private addRandomTiles(count: number) {

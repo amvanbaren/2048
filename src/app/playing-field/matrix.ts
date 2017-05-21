@@ -27,14 +27,12 @@ export class Matrix {
             result[i] = new Array(n);
         });
 
-        console.log(JSON.stringify(result));
         Array.from(Array(m), (c, i) => {
             Array.from(Array(n), (r, j) => {
                 result[j][i] = matrix[i][j];
             });
         });
 
-        console.log(JSON.stringify(result));
         return result;
     }
 

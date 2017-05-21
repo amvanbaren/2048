@@ -8,6 +8,8 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
 import { PlayingFieldComponent } from './playing-field/playing-field.component';
 import { TileComponent } from './tile/tile.component';
 
+import { ScoreboardService } from './scoreboard.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,7 @@ import { TileComponent } from './tile/tile.component';
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [ScoreboardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,60 +1,92 @@
+import { browser, by, promise, WebElement } from 'protractor';
+import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
+import { GamePage } from '../game.page';
+
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-import { binding, given, when, then } from 'cucumber-tsflow';
-import { CallbackStepDefinition } from 'cucumber';
+defineSupportCode(({Given, When, Then}) => {
+    const gamePage = new GamePage();
 
-@binding()
-export class NewGameSteps {
+    Given(/^player has navigated to the game page$/, (callback: CallbackStepDefinition) => {
+        gamePage.navigateTo()
+                .then(callback);
+    });
 
-    @when(/^initial page load has completed$/)
-    private whenInitialPageLoadHasCompleted (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^score should be (\d+)$/, (expectedScore: number, callback: CallbackStepDefinition) => {
+        gamePage.getScore().then((s) => {
+            expect(s).to.be.equal(expectedScore);
+            callback();
+        });
+    });
 
-    @then(/^score should be (\d+)$/)
-    private thenScoreShouldBeZero (expectedScore: number, callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^best score should be (\d+)$/, function (expectedBestScore: number, callback: CallbackStepDefinition) {
+         gamePage.getBestScore().then((b) => {
+             expect(b).to.be.equal(expectedBestScore);
+             callback();
+         });
+    });
 
-    @then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/)
-    private thenAnEmptyPlayingFieldOfXByYTilesShouldBeVisible (
-        expectedTilesX: number,
-        expectedTilesY: number,
-        callback: CallbackStepDefinition) {
+    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, 
+        (expectedTilesX: number, expectedTilesY: number, callback: CallbackStepDefinition) => {
 
-        // Write code here that turns the phrase above into concrete actions
-    }
+        gamePage.getPlayingField().then((p) => { 
+            p.getWebElement().findElements(by.className('row')).then((r) => {
+                expect(r.length).to.be.equal(expectedTilesY);
 
-    @then(/^(\d+) tiles should be added at random to the playing field$/)
-    private thenXTilesShouldBeAddedAtRandomToThePlayingField (
-        expectedNumberOfTiles: number,
-        callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+                const promises = [];
+                r.forEach((i) => {
+                    const promise = i.findElements(by.css('[class^=col-]')).then((c) => {
+                        expect(c.length).to.be.equal(expectedTilesX);
+                    });
 
-    @when(/^player has clicked \'New game\' button$/)
-    private whenPlayerHasClickedNewGameButton (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+                    promises.push(promise);
+                });
 
-    @then(/^playing field should be cleared$/)
-    private thenPlayingFieldShouldBeCleared (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+                Promise.all(promises).then(() => {
+                    callback();
+                });
+            });
+        });
+    });
 
-    @then(/^score should be reset to (\d+)$/)
-    private thenScoreShouldBeResetToX (expectedScore: number, callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^(\d+) tiles should be added at random to the playing field$/,
+        (expectedTiles: number, callback: CallbackStepDefinition) => {
 
-    @given(/^game is over$/)
-    private giveGameIsOver (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+        // TODO: test this multiple times to ensure the tiles are added at random to the playing field
+        gamePage.getPlayingField().then((p) => {
+                p.getWebElement().findElements(by.css('.tile > p')).then((t) => {
+                expect(t.length).to.be.equal(expectedTiles);
+                callback();
+            });
+        });
+    });
 
-    @when(/^player has clicked \'Try again\' button$/)
-    private whenPlayerHasClickedTryAgainButton (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
-}
+    Given(/^best score is (\d+)$/, function (bestScore: number, callback: CallbackStepDefinition) {
+         gamePage.setBestScore(bestScore)
+            .then(callback);
+    });
+
+    Given(/^player made a move$/, (callback: CallbackStepDefinition) => {
+        // hacky way to make sure that 
+        // the player made at least one move
+        gamePage.moveLeft().then(() => {
+            gamePage.moveRight().then(() => {
+                gamePage.moveUp().then(() => {
+                    gamePage.moveDown().then(() => {
+                        callback();
+                    });
+                });
+            });
+        });
+    });
+
+    When(/^player has clicked \'New game\' button$/, (callback: CallbackStepDefinition) => {
+        gamePage.clickNewGame()
+            .then(callback);
+    });
+
+    Given(/^game is over$/, () => {});
+
+    When(/^player has clicked \'Try again\' button$/, () => {});
+});

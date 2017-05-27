@@ -1,33 +1,23 @@
+import { browser } from 'protractor';
+import { defineSupportCode } from 'cucumber';
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-import { binding, given, when, then } from 'cucumber-tsflow';
-import { CallbackStepDefinition } from 'cucumber';
+defineSupportCode(({Given, When, Then}) => {
 
-@binding()
-export class AddTileSteps {
+    Given(/^there is an empty tile on the playing field$/, () => {
 
-    @given(/^there is an empty tile on the playing field$/)
-    private givenThereIsAnEmptyTileOnThePlayingField (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    });
 
-    @when(/^a player move has ended$/)
-    private whenAPlayerMoveHasEnded (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^a player move has ended$/, () => {
 
-    @then(/^a new tile is added at random to an empty tile on the playing field$/)
-    private thenANewTileIsAddedAtRandomToAnEmptyTileOnThePlayingField (callback: CallbackStepDefinition) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    });
 
-    @then(/^the new tile's value is either (\d+) or (\d+)$/)
-    private thenTheNewTilesValueIsEitherXorY (
-        expectedTileValue1: number,
-        expectedTileValue2: number,
-        callback: CallbackStepDefinition) {
+    Then(/^a new tile is added at random to an empty tile on the playing field$/, () => {
 
-        // Write code here that turns the phrase above into concrete actions
-    }
-}
+    });
+
+    Then(/^the new tile's value is either (\d+) or (\d+)$/, (expectedTileValue1: number, expectedTileValue2: number) => {
+
+    });
+});

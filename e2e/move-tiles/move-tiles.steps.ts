@@ -1,54 +1,55 @@
+import { browser, by } from 'protractor';
+import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
+import { GamePage } from '../game.page';
+
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-import { binding, given, when, then } from 'cucumber-tsflow';
-import { CallbackStepDefinition } from 'cucumber';
+defineSupportCode(({Given, When, Then}) => {
+    const gamePage = new GamePage();
 
-@binding()
-export class MoveTilesSteps {
+    Given(/^there are possible moves left$/, (callback: CallbackStepDefinition) => {
+        gamePage.navigateTo()
+                .then(callback);
+    });
 
-    @given(/^there are possible moves left$/)
-    private givenThereArePossibleMovesLeft (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^player presses the \'up\' arrow key$/, () => {
+        // gamePage.moveUp();
+    });
 
-    @when(/^player presses the \'up\' arrow key$/)
-    private whenPlayerPressesTheUpArrowKey (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^all tiles on the playing field should move up$/, () => {
+        /*
+        const playingField = gamePage.getPlayingField().getWebElement();
 
-    @then(/^all tiles on the playing field should move up$/)
-    private thenAllTilesOnThePlayingFieldShouldMoveUp (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+        playingField.findElements(by.css('.tile > p')).then((e) => {
+            // after a move a new tile is added, that's why we do -1
+            const expectedTopTiles = e.length - 1;
 
-    @when(/^player presses the \'down\' arrow key$/)
-    private whenPlayerPressesTheDownArrowKey (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+            gamePage.getPlayingField().getWebElement().findElements(by.className('row')).then((e) => {
+                const top = e[0];
+                top.findElements(by.css('.tile > p')).then((t) => {
+                    expect(t.length).to.be.least(expectedTopTiles);
+                });
+            });
+        });
+        */
+    });
 
-    @then(/^all tiles on the playing field should move down$/)
-    private thenAllTilesOnThePlayingFieldShouldMoveDown (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^player presses the \'down\' arrow key$/, () => {
+        // gamePage.moveDown();
+    });
 
-    @when(/^player presses the \'left\' arrow key$/)
-    private whenPlayerPressesTheLeftArrowKey (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^all tiles on the playing field should move down$/, () => {});
 
-    @then(/^all tiles on the playing field should move left$/)
-    private thenAllTilesOnThePlayingFieldShouldMoveLeft (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    When(/^player presses the \'left\' arrow key$/, () => {
+        // gamePage.moveLeft();
+    });
 
-    @when(/^player presses the \'right\' arrow key$/)
-    private whenPlayerPressesTheRightArrowKey (callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
+    Then(/^all tiles on the playing field should move left$/, () => {});
 
-    @then(/^all tiles on the playing field should move right$/)
-    private thenAllTilesOnThePlayingFieldShouldMoveRight(callback) {
-        // Write code here that turns the phrase above into concrete actions
-    }
-}
+    When(/^player presses the \'right\' arrow key$/, () => {
+        // gamePage.moveRight();
+    });
+
+    Then(/^all tiles on the playing field should move right$/, () => {});
+});

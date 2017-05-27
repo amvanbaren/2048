@@ -14,10 +14,11 @@ defineSupportCode(({Given, When, Then}) => {
     });
 
     When(/^player presses the \'up\' arrow key$/, () => {
-        gamePage.moveUp();
+        // gamePage.moveUp();
     });
 
     Then(/^all tiles on the playing field should move up$/, () => {
+        /*
         const playingField = gamePage.getPlayingField().getWebElement();
 
         playingField.findElements(by.css('.tile > p')).then((e) => {
@@ -31,22 +32,23 @@ defineSupportCode(({Given, When, Then}) => {
                 });
             });
         });
+        */
     });
 
     When(/^player presses the \'down\' arrow key$/, () => {
-        gamePage.moveDown();
+        // gamePage.moveDown();
     });
 
     Then(/^all tiles on the playing field should move down$/, () => {});
 
     When(/^player presses the \'left\' arrow key$/, () => {
-        gamePage.moveLeft();
+        // gamePage.moveLeft();
     });
 
     Then(/^all tiles on the playing field should move left$/, () => {});
 
     When(/^player presses the \'right\' arrow key$/, () => {
-        gamePage.moveRight();
+        // gamePage.moveRight();
     });
 
     Then(/^all tiles on the playing field should move right$/, () => {});

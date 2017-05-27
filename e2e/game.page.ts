@@ -4,41 +4,56 @@ const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
 export class GamePage {
-    private playingField: ElementFinder;
 
-    constructor(){
-        this.playingField = element(by.id('playing-field'));
-    }
+    constructor(){}
 
     navigateTo(): promise.Promise<any> {
         return browser.get('/');
+    }
+
+    clickNewGame(): promise.Promise<any> {
+        return browser.findElement(by.id('new-game'))
+            .click();
     }
 
     getScore(): promise.Promise<number> {
         return element(by.id('score')).getText().then(Number.parseInt);
     }
 
-    getPlayingField(): ElementFinder {
-        return this.playingField;
+    getBestScore(): promise.Promise<number> {
+        return element(by.id('best')).getText().then(Number.parseInt);
+    }
+
+    setBestScore(bestScore: number): promise.Promise<any> {
+        return browser.executeScript('document.getElementById(\'best\').innerHTML=' + bestScore);
+    }
+
+    getPlayingField(): promise.Promise<ElementFinder> {
+        return browser.waitForAngular()
+            .then(() => {
+                return element(by.id('playing-field'))
+            });
     }
 
     moveUp() {
-        this.move(protractor.Key.ARROW_UP);
+        return this.move(protractor.Key.ARROW_UP);
     }
 
     moveDown() {
-        this.move(protractor.Key.ARROW_DOWN);
+        return this.move(protractor.Key.ARROW_DOWN);
     }
 
     moveLeft() {
-        this.move(protractor.Key.ARROW_LEFT);
+        return this.move(protractor.Key.ARROW_LEFT);
     }
 
     moveRight() {
-        this.move(protractor.Key.ARROW_RIGHT);
+        return this.move(protractor.Key.ARROW_RIGHT);
     }
 
-    private move(key: string){
-        this.playingField.sendKeys(key);
+    private move(key: string): promise.Promise<any> {
+        return browser.actions()
+            .sendKeys(key)
+            .perform();
     }
 }

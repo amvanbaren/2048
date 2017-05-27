@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { ScoreboardService } from '../scoreboard.service';
+import { ScoreboardService } from '../score-board.service';
 
 @Component({
   selector: 'app-score-board',
@@ -8,7 +8,8 @@ import { ScoreboardService } from '../scoreboard.service';
   styleUrls: ['./score-board.component.css']
 })
 export class ScoreBoardComponent implements OnDestroy {
-  private subscription: Subscription;
+  private scoreChangedSubscription: Subscription;
+  private scoreResetSubscription: Subscription;
   score: number;
   best: number;
 
@@ -16,19 +17,21 @@ export class ScoreBoardComponent implements OnDestroy {
     this.score = 0;
     this.best = 0;
 
-    this.subscription = service.scoreChanged$.subscribe(score => {
-      console.log('SCORE CHANGE');
+    this.scoreChangedSubscription = service.scoreChanged$.subscribe(score => {
       this.score += score;
       if (this.best < this.score) {
         this.best = this.score;
       }
+    });
 
-      console.log('score: ' + this.score);
+    this.scoreResetSubscription = service.scoreReset$.subscribe(() => {
+      this.score = 0;
     });
   }
 
   ngOnDestroy() {
     // prevent memory leak when component destroyed
-    this.subscription.unsubscribe();
+    this.scoreChangedSubscription.unsubscribe();
+    this.scoreResetSubscription.unsubscribe();
   }
 }

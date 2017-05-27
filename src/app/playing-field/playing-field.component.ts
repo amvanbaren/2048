@@ -1,16 +1,18 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import * as Chance from 'chance';
 import { Point } from './point';
 import { Direction } from './direction';
 import { Matrix } from './matrix';
-import { ScoreboardService } from '../scoreboard.service';
+import { ScoreboardService } from '../score-board.service';
+import { PlayingFieldService } from '../playing-field.service';
 
 @Component({
   selector: 'app-playing-field',
   templateUrl: './playing-field.component.html',
   styleUrls: ['./playing-field.component.css']
 })
-export class PlayingFieldComponent implements OnInit {
+export class PlayingFieldComponent implements OnInit, OnDestroy {
   private empty = 0;
   private rows = 4;
   private columns = 4;
@@ -18,26 +20,23 @@ export class PlayingFieldComponent implements OnInit {
   private chance;
   private matrix;
 
+  private subscription: Subscription;
+
   tiles: number[][];
 
-  constructor(scoreBoardService: ScoreboardService) {
+  constructor(scoreBoardService: ScoreboardService, playingFieldService: PlayingFieldService) {
     this.scoreBoardService = scoreBoardService;
     this.chance = new Chance();
     this.matrix = new Matrix();
-    this.tiles = [];
-
-    Array.from(Array(this.rows), () => {
-      const tileRow = [];
-      Array.from(Array(this.columns), () => {
-        tileRow.push(this.empty);
-      });
-
-      this.tiles.push(tileRow);
-    });
+    this.subscription = playingFieldService.playingFieldReset$.subscribe(() => { this.reset(); });
   }
 
   ngOnInit() {
-    this.addRandomTiles(2);
+    this.reset();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   @HostListener('window:keyup.arrowup')
@@ -58,6 +57,21 @@ export class PlayingFieldComponent implements OnInit {
   @HostListener('window:keyup.arrowright')
   moveRight() {
     this.move(Direction.Right);
+  }
+
+  private reset() {
+    this.tiles = [];
+
+    Array.from(Array(this.rows), () => {
+      const tileRow = [];
+      Array.from(Array(this.columns), () => {
+        tileRow.push(this.empty);
+      });
+
+      this.tiles.push(tileRow);
+    });
+
+    this.addRandomTiles(2);
   }
 
   private move(direction: Direction) {

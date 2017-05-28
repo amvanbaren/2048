@@ -1,23 +1,36 @@
 import { browser } from 'protractor';
-import { defineSupportCode } from 'cucumber';
+import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
+import { GamePage } from '../game.page';
+
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-defineSupportCode(({Given, When, Then}) => {
+defineSupportCode(({ Given, When, Then }) => {
+    const gamePage = new GamePage();
 
-    When(/^there are no possible moves left$/, () => {
+    Given(/^there are no possible moves left$/, (callback: CallbackStepDefinition) => {
+        const tiles = [
+            [670, 702, 814, 228],
+            [908, 321, 656, 943],
+            [334, 555, 114, 427],
+            [718, 328, 515, 888]
+        ];
 
+        gamePage.setPlayingField(tiles).then(() => {
+            callback();
+        });
     });
 
-    Then(/^playing field should become greyed out$/, () => {
-
+    When(/^user makes move$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveUp().then(() => {
+            callback();
+        });
     });
 
-    Then(/^on top of the playing field \'Game over!\' should be displayed$/, () => {
-
-    });
-
-    Then(/^below the \'Game over!\' text a \'Try again\' button should be displayed$/, () => {
-        
+    Then(/^game over overlay is shown$/, (callback: CallbackStepDefinition) => {
+        gamePage.getGameOver().getWebElement().then((g) => {
+            expect(g).to.not.be.an('undefined');
+            callback();
+        });
     });
 });

@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewGameComponent } from './new-game.component';
+import { ScoreboardService } from '../score-board.service';
+import { PlayingFieldService } from '../playing-field.service';
 
 describe('NewGameComponent', () => {
   let component: NewGameComponent;
@@ -8,7 +10,8 @@ describe('NewGameComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewGameComponent ]
+      declarations: [ NewGameComponent ],
+      providers: [ScoreboardService, PlayingFieldService]
     })
     .compileComponents();
   }));

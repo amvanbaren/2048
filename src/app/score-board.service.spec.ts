@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ScoreboardService } from './scoreboard.service';
+import { ScoreboardService } from './score-board.service';
 
 describe('ScoreboardService', () => {
   beforeEach(() => {

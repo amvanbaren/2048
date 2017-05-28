@@ -22,6 +22,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
+  gameOver: boolean;
   tiles: number[][];
 
   constructor(scoreBoardService: ScoreboardService, playingFieldService: PlayingFieldService) {
@@ -60,6 +61,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
   }
 
   private reset() {
+    this.gameOver = false;
     this.tiles = [];
 
     Array.from(Array(this.rows), () => {
@@ -150,6 +152,8 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
       });
 
       this.addRandomTiles(1);
+    } else {
+      this.determinePossibleMoves();
     }
   }
 
@@ -173,5 +177,49 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
       this.tiles[p.getX()][p.getY()] = val;
     });
+  }
+
+  private determinePossibleMoves() {
+    let playingFieldFull = true;
+
+    emptyTilesLoop:
+    for (const row of this.tiles) {
+      for (const column of row) {
+        if (column === this.empty) {
+          playingFieldFull = false;
+          break emptyTilesLoop;
+        }
+      }
+    }
+
+    if (playingFieldFull) {
+      let canMergeTiles = false;
+
+      const rows = this.rows - 1;
+      mergeTilesRowLoop:
+      for (let c = 0; c < this.columns; c++) {
+        for (let r = 0; r < rows; r++) {
+          if (this.tiles[r][c] === this.tiles[r + 1][c]) {
+            canMergeTiles = true;
+            break mergeTilesRowLoop;
+          }
+        }
+      }
+
+      if (!canMergeTiles) {
+        const columns = this.columns - 1;
+        mergeTilesColumnLoop:
+        for (let r = 0; r < this.rows; r++) {
+          for (let c = 0; c < columns; c++) {
+            if (this.tiles[r][c] === this.tiles[r][c + 1]) {
+              canMergeTiles = true;
+              break mergeTilesColumnLoop;
+            }
+          }
+        }
+      }
+
+      this.gameOver = !canMergeTiles;
+    }
   }
 }

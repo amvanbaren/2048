@@ -25,6 +25,7 @@ exports.config = {
       }
   },
   specs: [
+    'e2e/new-game/new-game.feature',
     'e2e/**/*.feature'
   ],
   cucumberNodeOpts: {

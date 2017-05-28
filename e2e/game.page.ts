@@ -28,11 +28,19 @@ export class GamePage {
         return browser.executeScript('document.getElementById(\'best\').innerHTML=' + bestScore);
     }
 
-    getPlayingField(): promise.Promise<ElementFinder> {
-        return browser.waitForAngular()
-            .then(() => {
-                return element(by.id('playing-field'))
-            });
+    getPlayingField(): ElementFinder {
+        return element(by.id('playing-field'))
+    }
+
+    setPlayingField(tiles: number[][]): promise.Promise<any> {
+        return browser.executeScript(`
+            var playingField = document.getElementById('playing-field');
+            ng.probe(playingField).componentInstance.tiles = ` + JSON.stringify(tiles) + `;
+        `);
+    }
+
+    getGameOver(): ElementFinder {
+        return element(by.id('game-over'));
     }
 
     moveUp() {

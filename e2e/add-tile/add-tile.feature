@@ -3,7 +3,7 @@ Feature: Add tile
     so that the new tile can be used to create higher value tiles
 
     Scenario: Add tile
-    Given there is an empty tile on the playing field
+    Given the playing field is empty
     When a player move has ended
-    Then a new tile is added at random to an empty tile on the playing field
+    Then 1 tile should be added at random to the playing field
     And the new tile's value is either 2 or 4

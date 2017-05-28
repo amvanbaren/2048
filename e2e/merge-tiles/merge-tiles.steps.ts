@@ -1,17 +1,61 @@
-import { browser } from 'protractor';
-import { defineSupportCode } from 'cucumber';
+import { browser, by } from 'protractor';
+import { defineSupportCode, CallbackStepDefinition } from 'cucumber';
+import { GamePage } from '../game.page';
+
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-defineSupportCode(({Given, When, Then}) => {
+defineSupportCode(({ Given, When, Then }) => {
+    const gamePage = new GamePage();
 
-    Given(/^the player started a move$/, () => {});
+    Given(/^a playingfield with 2 tiles of value (\d+) on the same row$/, (value: number, callback: CallbackStepDefinition) => {
+        const tiles = [
+            [0, 0, 0, 0],
+            [value, 0, value, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
 
-    When(/^two tiles with the same value collide during a move$/, () => {});
+        gamePage.setPlayingField(tiles).then(() => {
+            callback();
+        });
+    });
 
-    Then(/^the two tiles should be merged into one tile$/, () => {});
+    Given(/^the score is 0$/, (callback: CallbackStepDefinition) => {
+        gamePage.setScore(0).then(() => {
+            callback();
+        });
+    });
 
-    Then(/^the merged tile value should be the sum of the two collided tile values$/, () => {});
+    Given(/^the player moves right$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveRight().then(() => {
+            callback();
+        });
+    });
 
-    Then(/^the score should be incremented by the value of the merged tile$/, () => {});
+    Then(/^the 2 tiles should be merged into 1 tile$/, (callback: CallbackStepDefinition) => {
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile > p')).then((e) => {
+            // one merged tile and a newly spawned tile
+            expect(e.length).to.be.equal(2);
+
+            callback();
+        });
+    });
+
+    Then(/^the merged tile value should be (\d+)$/, function (value: number, callback: CallbackStepDefinition) {
+        const selector = '.tile[tile="' + value + '"]';
+        gamePage.getPlayingField().getWebElement().findElements(by.css(selector)).then((e) => {
+            expect(e.length).to.be.equal(1);
+
+            callback();
+        });
+    });
+
+    Then(/^the score should be incremented by (\d+) as well$/, (value: number, callback: CallbackStepDefinition) => {
+         gamePage.getScore().then((s) => {
+             expect(s).to.be.equal(value);
+
+             callback();
+         });
+    });
 });

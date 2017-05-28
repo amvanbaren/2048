@@ -3,10 +3,10 @@ Feature: Merge tiles
     value collide during a move
 
     Scenario: Merge tiles
-    Given the player started a move
-    When two tiles with the same value collide during a move
-    Then the two tiles should be merged into one tile
-    And the merged tile value should be the sum of the two collided tile values
-    And the score should be incremented by the value of the merged tile 
+    Given a playingfield with 2 tiles of value 256 on the same row
+    Given the player moves right
+    Then the 2 tiles should be merged into 1 tile
+    And the merged tile value should be 512
+    And the score should be incremented by 512 as well
 
     

@@ -20,12 +20,22 @@ export class GamePage {
         return element(by.id('score')).getText().then(Number.parseInt);
     }
 
+    setScore(score: number): promise.Promise<any> {
+        return browser.executeScript(`
+            var scoreBoard = document.getElementById('score-board');
+            ng.probe(scoreBoard).componentInstance.score = ` + score + `;`
+        );
+    }
+
     getBestScore(): promise.Promise<number> {
         return element(by.id('best')).getText().then(Number.parseInt);
     }
 
     setBestScore(bestScore: number): promise.Promise<any> {
-        return browser.executeScript('document.getElementById(\'best\').innerHTML=' + bestScore);
+        return browser.executeScript(`
+            var scoreBoard = document.getElementById('score-board');
+            ng.probe(scoreBoard).componentInstance.best = ` + bestScore + `;`
+        );
     }
 
     getPlayingField(): ElementFinder {

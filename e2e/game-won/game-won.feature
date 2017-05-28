@@ -3,7 +3,6 @@ Feature: Game won
     then the player has won the game
 
     Scenario: Game won
-    When there is a tile with value 2048 present on the playing field
-    Then a yellow overlay is displayed on top of the playing field
-    And on top of the playing field 'You win!' should be displayed
-    And below the 'You win!' text a 'New game' button should be displayed
+    Given there are 2 tiles with value 1024 present on the playing field
+    When the player merges the 2 1024 tiles
+    Then game won overlay is shown

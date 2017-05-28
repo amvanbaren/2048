@@ -23,6 +23,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   gameOver: boolean;
+  gameWon: boolean;
   tiles: number[][];
 
   constructor(scoreBoardService: ScoreboardService, playingFieldService: PlayingFieldService) {
@@ -62,6 +63,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   private reset() {
     this.gameOver = false;
+    this.gameWon = false;
     this.tiles = [];
 
     Array.from(Array(this.rows), () => {
@@ -151,7 +153,9 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
         this.tiles.push(r.slice(0));
       });
 
-      this.addRandomTiles(1);
+      if (!this.hasWon()) {
+        this.addRandomTiles(1);
+      }
     } else {
       this.determinePossibleMoves();
     }
@@ -220,6 +224,20 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
       }
 
       this.gameOver = !canMergeTiles;
+    }
+  }
+
+  private hasWon() {
+    const winningTile = 2048;
+
+    hasWonLoop:
+    for (let r = 0; r < this.rows; r++) {
+      for (let c = 0; c < this.columns; c++) {
+        if (this.tiles[r][c] == winningTile) {
+          this.gameWon = true;
+          break hasWonLoop;
+        }
+      }
     }
   }
 }

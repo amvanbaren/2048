@@ -5,51 +5,124 @@ import { GamePage } from '../game.page';
 const chai = require('chai').use(require('chai-as-promised'));
 const expect = chai.expect;
 
-defineSupportCode(({Given, When, Then}) => {
+defineSupportCode(({ Given, When, Then }) => {
     const gamePage = new GamePage();
+    const validateMove = (tiles: any[], callback: CallbackStepDefinition) => {
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile')).then((e) => {
+            const promises = [];
 
-    Given(/^there are possible moves left$/, (callback: CallbackStepDefinition) => {
-        gamePage.navigateTo()
-                .then(callback);
-    });
-
-    When(/^player presses the \'up\' arrow key$/, () => {
-        // gamePage.moveUp();
-    });
-
-    Then(/^all tiles on the playing field should move up$/, () => {
-        /*
-        const playingField = gamePage.getPlayingField().getWebElement();
-
-        playingField.findElements(by.css('.tile > p')).then((e) => {
-            // after a move a new tile is added, that's why we do -1
-            const expectedTopTiles = e.length - 1;
-
-            gamePage.getPlayingField().getWebElement().findElements(by.className('row')).then((e) => {
-                const top = e[0];
-                top.findElements(by.css('.tile > p')).then((t) => {
-                    expect(t.length).to.be.least(expectedTopTiles);
+            tiles.forEach((item) => {
+                const promise = e[item.index].getAttribute('tile').then((a) => {
+                    expect(a).to.be.equal(item.value);
                 });
+
+                promises.push(promise);
+            });
+
+            Promise.all(promises).then(() => {
+                callback();
             });
         });
-        */
+    };
+
+    Given(/^there are possible moves left$/, (callback: CallbackStepDefinition) => {
+        const tiles = [
+            [0, 0, 0, 0],
+            [0, 2, 8, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+
+        gamePage.setPlayingField(tiles).then(() => {
+            callback()
+        });
     });
 
-    When(/^player presses the \'down\' arrow key$/, () => {
-        // gamePage.moveDown();
+    When(/^player presses the \'up\' arrow key$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveUp().then(() => {
+            callback();
+        });
     });
 
-    Then(/^all tiles on the playing field should move down$/, () => {});
+    Then(/^all tiles on the playing field should move up$/, (callback: CallbackStepDefinition) => {
+        // expected playing field:
+        // [
+        //  [0,2,8,0],
+        //  [0,0,0,0],
+        //  [0,0,0,0],
+        //  [0,0,0,0]
+        // ]
+        const tiles = [
+            { index: 1, value: '2' },
+            { index: 2, value: '8' }
+        ];
 
-    When(/^player presses the \'left\' arrow key$/, () => {
-        // gamePage.moveLeft();
+        validateMove(tiles, callback);
     });
 
-    Then(/^all tiles on the playing field should move left$/, () => {});
-
-    When(/^player presses the \'right\' arrow key$/, () => {
-        // gamePage.moveRight();
+    When(/^player presses the \'down\' arrow key$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveDown().then(() => {
+            callback();
+        });
     });
 
-    Then(/^all tiles on the playing field should move right$/, () => {});
+    Then(/^all tiles on the playing field should move down$/, (callback: CallbackStepDefinition) => {
+        // expected playing field:
+        // [
+        //  [0,0,0,0],
+        //  [0,0,0,0],
+        //  [0,0,0,0],
+        //  [0,2,8,0]
+        // ]
+        const tiles = [
+            { index: 13, value: '2' },
+            { index: 14, value: '8' }
+        ];
+
+        validateMove(tiles, callback);
+     });
+
+    When(/^player presses the \'left\' arrow key$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveLeft().then(() => {
+            callback();
+        });
+    });
+
+    Then(/^all tiles on the playing field should move left$/, (callback: CallbackStepDefinition) => {
+        // expected playing field:
+        // [
+        //  [0,0,0,0],
+        //  [2,8,0,0],
+        //  [0,0,0,0],
+        //  [0,0,0,0]
+        // ]
+        const tiles = [
+            { index: 4, value: '2' },
+            { index: 5, value: '8' }
+        ];
+
+        validateMove(tiles, callback);
+    });
+
+    When(/^player presses the \'right\' arrow key$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveRight().then(() => {
+            callback();
+        });
+    });
+
+    Then(/^all tiles on the playing field should move right$/, (callback: CallbackStepDefinition) => { 
+        // expected playing field:
+        // [
+        //  [0,0,0,0],
+        //  [0,0,2,8],
+        //  [0,0,0,0],
+        //  [0,0,0,0]
+        // ]
+        const tiles = [
+            { index: 6, value: '2' },
+            { index: 7, value: '8' }
+        ];
+
+        validateMove(tiles, callback);
+    });
 });

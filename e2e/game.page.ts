@@ -43,6 +43,10 @@ export class GamePage {
         return element(by.id('game-over'));
     }
 
+    getGameWon(): ElementFinder {
+        return element(by.id('game-won'));
+    }
+
     moveUp() {
         return this.move(protractor.Key.ARROW_UP);
     }

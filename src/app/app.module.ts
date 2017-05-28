@@ -11,6 +11,7 @@ import { TileComponent } from './tile/tile.component';
 
 import { ScoreboardService } from './score-board.service';
 import { PlayingFieldService } from './playing-field.service';
+import { GameOverComponent } from './game-over/game-over.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PlayingFieldService } from './playing-field.service';
     ScoreBoardComponent,
     PlayingFieldComponent,
     TileComponent,
-    NewGameComponent
+    NewGameComponent,
+    GameOverComponent
   ],
   imports: [
     BrowserModule,

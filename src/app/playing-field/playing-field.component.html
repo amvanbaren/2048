@@ -1,4 +1,5 @@
 <div id="playing-field" class="col-xs-12">
+  <app-game-over *ngIf="gameOver"></app-game-over>
   <div class="row" *ngFor="let tileRow of tiles">
     <div class="col-xs-3" *ngFor="let tile of tileRow">
       <app-tile [tile]="tile"></app-tile>

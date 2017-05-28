@@ -1,13 +1,26 @@
 import { TestBed, async } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
+import { PlayingFieldComponent } from './playing-field/playing-field.component';
+import { NewGameComponent } from './new-game/new-game.component';
+import { ScoreBoardComponent } from './score-board/score-board.component';
+import { GameOverComponent } from './game-over/game-over.component';
+import { TileComponent } from './tile/tile.component';
+import { ScoreboardService } from './score-board.service';
+import { PlayingFieldService } from './playing-field.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        PlayingFieldComponent,
+        NewGameComponent,
+        ScoreBoardComponent,
+        GameOverComponent,
+        TileComponent
       ],
+      providers: [ScoreboardService, PlayingFieldService]
     }).compileComponents();
   }));
 

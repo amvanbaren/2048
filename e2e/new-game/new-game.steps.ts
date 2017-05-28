@@ -30,22 +30,20 @@ defineSupportCode(({Given, When, Then}) => {
     Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, 
         (expectedTilesX: number, expectedTilesY: number, callback: CallbackStepDefinition) => {
 
-        gamePage.getPlayingField().then((p) => { 
-            p.getWebElement().findElements(by.className('row')).then((r) => {
-                expect(r.length).to.be.equal(expectedTilesY);
+        gamePage.getPlayingField().getWebElement().findElements(by.className('row')).then((r) => {
+            expect(r.length).to.be.equal(expectedTilesY);
 
-                const promises = [];
-                r.forEach((i) => {
-                    const promise = i.findElements(by.css('[class^=col-]')).then((c) => {
-                        expect(c.length).to.be.equal(expectedTilesX);
-                    });
-
-                    promises.push(promise);
+            const promises = [];
+            r.forEach((i) => {
+                const promise = i.findElements(by.css('[class^=col-]')).then((c) => {
+                    expect(c.length).to.be.equal(expectedTilesX);
                 });
 
-                Promise.all(promises).then(() => {
-                    callback();
-                });
+                promises.push(promise);
+            });
+
+            Promise.all(promises).then(() => {
+                callback();
             });
         });
     });
@@ -54,11 +52,9 @@ defineSupportCode(({Given, When, Then}) => {
         (expectedTiles: number, callback: CallbackStepDefinition) => {
 
         // TODO: test this multiple times to ensure the tiles are added at random to the playing field
-        gamePage.getPlayingField().then((p) => {
-                p.getWebElement().findElements(by.css('.tile > p')).then((t) => {
-                expect(t.length).to.be.equal(expectedTiles);
-                callback();
-            });
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile > p')).then((t) => {
+            expect(t.length).to.be.equal(expectedTiles);
+            callback();
         });
     });
 

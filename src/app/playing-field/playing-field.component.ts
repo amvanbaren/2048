@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as Chance from 'chance';
 import { Point } from './point';
 import { Direction } from './direction';
+import { Tile } from '../tile/tile';
 import { Matrix } from './matrix';
 import { ScoreboardService } from '../score-board.service';
 import { PlayingFieldService } from '../playing-field.service';
@@ -24,7 +25,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   gameOver: boolean;
   gameWon: boolean;
-  tiles: number[][];
+  tiles: Tile[][];
 
   constructor(scoreBoardService: ScoreboardService, playingFieldService: PlayingFieldService) {
     this.scoreBoardService = scoreBoardService;
@@ -69,7 +70,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     Array.from(Array(this.rows), () => {
       const tileRow = [];
       Array.from(Array(this.columns), () => {
-        tileRow.push(this.empty);
+        tileRow.push(new Tile(this.empty));
       });
 
       this.tiles.push(tileRow);
@@ -82,7 +83,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     // copy tiles
     let tiles: number[][] = [];
     this.tiles.forEach(r => {
-      tiles.push(r.slice(0));
+      tiles.push(r.slice(0).map(t => t.value));
     });
 
     let degrees: number;
@@ -136,7 +137,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     let equal = true;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.columns; j++) {
-        if (this.tiles[i][j] !== tiles[i][j]) {
+        if (this.tiles[i][j].value !== tiles[i][j]) {
           equal = false;
           break;
         }
@@ -148,10 +149,11 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     }
 
     if (!equal) {
-      this.tiles.length = 0;
-      tiles.forEach(r => {
-        this.tiles.push(r.slice(0));
+    Array.from(Array(this.rows), (r, i) => {
+      Array.from(Array(this.columns), (c, j) => {
+        this.tiles[i][j].value = tiles[i][j];
       });
+    });
 
       if (!this.hasWon()) {
         this.addRandomTiles(1);
@@ -165,7 +167,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     const emptyTiles = [];
     this.tiles.forEach((r, i) => {
       r.forEach((t, j) => {
-        if (t === this.empty) {
+        if (t.value === this.empty) {
           emptyTiles.push(new Point(i, j));
         }
       });
@@ -179,7 +181,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     randomTiles.forEach((p) => {
       const val = chance.integer({ min: 0, max: 9 }) === 0 ? 4 : 2;
 
-      this.tiles[p.getX()][p.getY()] = val;
+      this.tiles[p.getX()][p.getY()].value = val;
     });
   }
 
@@ -189,7 +191,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     emptyTilesLoop:
     for (const row of this.tiles) {
       for (const column of row) {
-        if (column === this.empty) {
+        if (column.value === this.empty) {
           playingFieldFull = false;
           break emptyTilesLoop;
         }
@@ -233,7 +235,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     hasWonLoop:
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.columns; c++) {
-        if (this.tiles[r][c] == winningTile) {
+        if (this.tiles[r][c].value === winningTile) {
           this.gameWon = true;
           break hasWonLoop;
         }

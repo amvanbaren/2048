@@ -104,10 +104,10 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     tiles = this.matrix.rotate(tiles, degrees);
 
     // up
-    Array.from(Array(this.rows - 1), (c, i) => {
+    Array.from(Array(this.rows - 1), (r, i) => {
       // start with the second row
       const index = i + 1;
-      Array.from(Array(this.columns), (r, j) => {
+      Array.from(Array(this.columns), (c, j) => {
         let u;
         // move tiles
         for (u = 0; u < index; u++) {

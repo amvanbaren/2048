@@ -8,13 +8,8 @@ const expect = chai.expect;
 defineSupportCode(({ Given, When, Then }) => {
     const gamePage = new GamePage();
 
-    Given(/^a playingfield with 2 tiles of value (\d+) on the same row$/, (value: number, callback: CallbackStepDefinition) => {
-        const tiles = [
-            [0, 0, 0, 0],
-            [value, 0, value, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0]
-        ];
+    Given(/^a playingfield: (.*)$/, (playingfield: string, callback: CallbackStepDefinition) => {
+        const tiles = JSON.parse(playingfield);
 
         gamePage.setPlayingField(tiles).then(() => {
             callback();
@@ -33,20 +28,39 @@ defineSupportCode(({ Given, When, Then }) => {
         });
     });
 
-    Then(/^the 2 tiles should be merged into 1 tile$/, (callback: CallbackStepDefinition) => {
-        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile > p')).then((e) => {
-            // one merged tile and a newly spawned tile
-            expect(e.length).to.be.equal(2);
-
+    Given(/^the player moves left$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveLeft().then(() => {
             callback();
         });
     });
 
-    Then(/^the merged tile value should be (\d+)$/, function (value: number, callback: CallbackStepDefinition) {
+    Given(/^the player moves up$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveUp().then(() => {
+            callback();
+        });
+    });
+
+    Given(/^the player moves down$/, (callback: CallbackStepDefinition) => {
+        gamePage.moveDown().then(() => {
+            callback();
+        });
+    });
+
+    Then(/^the value of the merged tile at index (\d+) should be (\d+)$/,
+    (index: number, value: number, callback: CallbackStepDefinition) => {
+        const selector = '.tile[tile="' + value + '"]';
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile')).then((tiles) => {
+            tiles[index].getAttribute('tile').then((t) => {
+                expect(Number.parseInt(t)).to.equal(value);
+                callback();
+            });
+        });
+    });
+
+    Then(/^there shouldn\'t be any tiles with value (\d+) on the playingfield$/, (value: number, callback: CallbackStepDefinition) => {
         const selector = '.tile[tile="' + value + '"]';
         gamePage.getPlayingField().getWebElement().findElements(by.css(selector)).then((e) => {
-            expect(e.length).to.be.equal(1);
-
+            expect(e.length).to.equal(0);
             callback();
         });
     });
@@ -57,5 +71,15 @@ defineSupportCode(({ Given, When, Then }) => {
 
              callback();
          });
+    });
+
+    Then(/^the original (\d+) tile at index (\d+) shouldn\'t be merged$/,
+    (value: number, index: number, callback: CallbackStepDefinition) => {
+        gamePage.getPlayingField().getWebElement().findElements(by.css('.tile')).then((tiles) => {
+            tiles[index].getAttribute('tile').then((t) => {
+                expect(Number.parseInt(t)).to.equal(value);
+                callback();
+            });
+        });
     });
 });

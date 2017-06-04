@@ -25,6 +25,15 @@ Scenario: Try again
     And best score should be 1200
     And an empty playing field of 4 by 4 tiles should be visible 
     And 2 tiles should be added at random to the playing field
+    And game over overlay should be hidden
 
-
+Scenario: Play again
+    Given player has won
+    Given best score is 1200
+    When player has clicked 'Play again' button
+    Then score should be 0
+    And best score should be 1200
+    And an empty playing field of 4 by 4 tiles should be visible 
+    And 2 tiles should be added at random to the playing field
+    And game won overlay should be hidden
     

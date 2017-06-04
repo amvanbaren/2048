@@ -27,7 +27,7 @@ defineSupportCode(({Given, When, Then}) => {
          });
     });
 
-    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/, 
+    Then(/^an empty playing field of (\d+) by (\d+) tiles should be visible$/,
         (expectedTilesX: number, expectedTilesY: number, callback: CallbackStepDefinition) => {
 
         gamePage.getPlayingField().getWebElement().findElements(by.className('row')).then((r) => {
@@ -64,7 +64,7 @@ defineSupportCode(({Given, When, Then}) => {
     });
 
     Given(/^player made a move$/, (callback: CallbackStepDefinition) => {
-        // hacky way to make sure that 
+        // hacky way to make sure that
         // the player made at least one move
         gamePage.moveLeft().then(() => {
             gamePage.moveRight().then(() => {
@@ -82,7 +82,55 @@ defineSupportCode(({Given, When, Then}) => {
             .then(callback);
     });
 
-    Given(/^game is over$/, () => {});
+    Given(/^game is over$/, (callback: CallbackStepDefinition) => {
+        const tiles = [
+            [4, 2, 8, 2],
+            [2, 8, 32, 64],
+            [8, 16, 4, 16],
+            [16, 32, 128, 32]
+        ];
 
-    When(/^player has clicked \'Try again\' button$/, () => {});
+        gamePage.setPlayingField(tiles).then(() => {
+            gamePage.moveUp().then(() => {
+                callback();
+            });
+        });
+    });
+
+    When(/^player has clicked \'Try again\' button$/, (callback: CallbackStepDefinition) => {
+        gamePage.clickTryAgain().then(() => {
+            callback();
+        });
+    });
+
+    Then(/^game over overlay should be hidden$/, (callback: CallbackStepDefinition) => {
+        expect(gamePage.getGameOver()).to.equal(null);
+        callback();
+    });
+
+    Given(/^player has won$/, (callback: CallbackStepDefinition) => {
+        const tiles = [
+            [1024, 0, 0, 0],
+            [0, 0, 0, 0],
+            [1024, 0, 0, 0],
+            [0, 0, 0, 0]
+        ];
+
+        gamePage.setPlayingField(tiles).then(() => {
+            gamePage.moveUp().then(() => {
+                callback();
+            });
+        });
+    });
+
+    When(/^player has clicked \'Play again\' button$/, (callback: CallbackStepDefinition) => {
+        gamePage.clickPlayAgain().then(() => {
+            callback();
+        });
+    });
+
+    Then(/^game won overlay should be hidden$/, (callback: CallbackStepDefinition) => {
+        expect(gamePage.getGameWon()).to.equal(null);
+        callback();
+    });
 });

@@ -12,8 +12,15 @@ export class GamePage {
     }
 
     clickNewGame(): promise.Promise<any> {
-        return browser.findElement(by.id('new-game'))
-            .click();
+        return browser.findElement(by.id('new-game')).click();
+    }
+
+    clickTryAgain(): promise.Promise<any> {
+        return browser.findElement(by.id('try-again')).click();
+    }
+
+    clickPlayAgain(): promise.Promise<any> {
+        return browser.findElement(by.id('play-again')).click();
     }
 
     getScore(): promise.Promise<number> {
@@ -50,11 +57,19 @@ export class GamePage {
     }
 
     getGameOver(): ElementFinder {
-        return element(by.id('game-over'));
+        try {
+            return element(by.id('game-over'));
+        } catch(exception) {
+            return null;
+        }
     }
 
     getGameWon(): ElementFinder {
-        return element(by.id('game-won'));
+        try {
+            return element(by.id('game-won'));
+        } catch(exception) {
+            return null;
+        }
     }
 
     moveUp() {

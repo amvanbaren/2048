@@ -24,7 +24,7 @@ import { NewGameService } from './new-game.service';
     TileComponent,
     NewGameComponent,
     GameOverComponent,
-    GameWonComponent
+    GameWonComponent,
   ],
   imports: [
     BrowserModule,

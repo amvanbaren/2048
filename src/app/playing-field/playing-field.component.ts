@@ -81,13 +81,9 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   private move(direction: Direction) {
     // copy tiles
-    let tiles: number[][] = [];
+    let tiles: Tile[][] = [];
     this.tiles.forEach(r => {
-      // set state
-      r.forEach(t => t.state = Direction[direction]);
-
-      // copy tile values
-      tiles.push(r.slice(0).map(t => t.value));
+      tiles.push(r.slice(0).map(t => new Tile(t.value)));
     });
 
     let degrees: number;
@@ -116,18 +112,20 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
         let u;
         // move tiles
         for (u = 0; u < index; u++) {
-          if (tiles[u][j] === this.empty) {
-            const value = tiles[index][j];
-            tiles[index][j] = this.empty;
-            tiles[u][j] = value;
+          if (tiles[u][j].value === this.empty) {
+            const value = tiles[index][j].value;
+            tiles[index][j].value = this.empty;
+
+            tiles[u][j].value = value;
             break;
           }
         }
         // merge tiles
-        if (u > 0 && tiles[u - 1][j] === tiles[u][j]) {
-          const value = tiles[u - 1][j] * 2;
-          tiles[u - 1][j] = value;
-          tiles[u][j] = this.empty;
+        if (u > 0 && !tiles[u - 1][j].merged && tiles[u - 1][j].value === tiles[u][j].value) {
+          const value = tiles[u - 1][j].value * 2;
+          tiles[u - 1][j].value = value;
+          tiles[u - 1][j].merged = true;
+          tiles[u][j].value = this.empty;
 
           this.scoreBoardService.changeScore(value);
         }
@@ -141,7 +139,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     let equal = true;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.columns; j++) {
-        if (this.tiles[i][j].value !== tiles[i][j]) {
+        if (this.tiles[i][j].value !== tiles[i][j].value) {
           equal = false;
           break;
         }
@@ -153,11 +151,21 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     }
 
     if (!equal) {
-    Array.from(Array(this.rows), (r, i) => {
-      Array.from(Array(this.columns), (c, j) => {
-        this.tiles[i][j].value = tiles[i][j];
+      Array.from(Array(this.rows), (r, i) => {
+        Array.from(Array(this.columns), (c, j) => {
+          const tile = tiles[i][j];
+          const value = tile.value;
+          if (value !== this.empty && this.tiles[i][j].value !== value) {
+            this.tiles[i][j].direction = direction;
+          } else {
+            this.tiles[i][j].direction = null;
+          }
+
+          this.tiles[i][j].value = tile.value;
+          this.tiles[i][j].added = tile.added;
+          this.tiles[i][j].merged = tile.merged;
+        });
       });
-    });
 
       if (!this.hasWon()) {
         this.addRandomTiles(1);
@@ -186,6 +194,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
       const val = chance.integer({ min: 0, max: 9 }) === 0 ? 4 : 2;
 
       this.tiles[p.getX()][p.getY()].value = val;
+      this.tiles[p.getX()][p.getY()].added = true;
     });
   }
 

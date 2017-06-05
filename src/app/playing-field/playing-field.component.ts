@@ -83,6 +83,10 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     // copy tiles
     let tiles: number[][] = [];
     this.tiles.forEach(r => {
+      // set state
+      r.forEach(t => t.state = Direction[direction]);
+
+      // copy tile values
       tiles.push(r.slice(0).map(t => t.value));
     });
 

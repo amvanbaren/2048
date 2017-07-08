@@ -1,3 +1,16 @@
-<div id="game-over">
-  <button id="try-again" (click)="tryAgain()" class="btn btn-error">Try Again</button>
+<div id="game-over" class="overlay-container">
+  <div class="overlay-outer">
+    <div class="overlay-inner">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <span class="h1 text-center">Game Over!</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-4 col-xs-4">
+          <button id="try-again" (click)="tryAgain()" class="btn btn-block btn-success">Try Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

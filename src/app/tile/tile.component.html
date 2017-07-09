@@ -1,3 +1,7 @@
-<div class="panel tile" [attr.tile]="tile">
-    <p class="text-center" *ngIf="tile > 0">{{tile}}</p>
+<div class="tile" [attr.tile]="tile">
+    <div class="container-overlay">
+        <div class="overlay-inner tile-inner" *ngIf="tile > 0">
+            {{tile}}
+        </div>
+    </div>
 </div>

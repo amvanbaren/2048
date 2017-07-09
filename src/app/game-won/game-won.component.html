@@ -1,3 +1,16 @@
-<div id="game-won">
-    <button id="play-again" (click)="playAgain()" class="btn btn-success">Play Again</button>
+<div id="game-won" class="overlay-container">
+  <div class="overlay-outer">
+    <div class="overlay-inner">
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <span class="h1 text-center">You Win!</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-offset-4 col-xs-4">
+            <button id="play-again" (click)="playAgain()" class="btn btn-block btn-default">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,4 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+/* ROW */
+.row {
+    margin-bottom: 15px;
+}
+
+.row:last-child {
+    margin-bottom: 0;
+}
 
 /* OVERLAY */
 .overlay-container {

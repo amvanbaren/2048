@@ -1,4 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { HammerConfig } from './hammer.config';
+
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -30,7 +32,15 @@ import { NewGameService } from './new-game.service';
     FormsModule,
     HttpModule
   ],
-  providers: [ScoreboardService, PlayingFieldService, NewGameService],
+  providers: [
+    ScoreboardService,
+    PlayingFieldService,
+    NewGameService,
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

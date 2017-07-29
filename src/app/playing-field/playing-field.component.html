@@ -1,4 +1,4 @@
-<div id="playing-field" class="col-xs-12 gutter">
+<div id="playing-field" class="col-xs-12 gutter" (swipeleft)="moveLeft()" (swiperight)="moveRight()" (swipeup)="moveUp()" (swipedown)="moveDown()">
   <app-game-over *ngIf="gameOver"></app-game-over>
   <app-game-won *ngIf="gameWon"></app-game-won>
   <div class="row" *ngFor="let tileRow of tiles">

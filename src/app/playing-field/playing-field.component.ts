@@ -44,25 +44,45 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:keyup.arrowup')
-  moveUp() {
+  arrowUp() {
     this.scroll.disable();
-    this.move(Direction.Up);
+    this.moveUp();
     this.scroll.enable();
+  }
+
+  moveUp() {
+    this.move(Direction.Up);
   }
 
   @HostListener('window:keyup.arrowdown')
-  moveDown() {
+  arrowDown() {
     this.scroll.disable();
-    this.move(Direction.Down);
+    this.moveDown();
     this.scroll.enable();
   }
 
+  moveDown() {
+    this.move(Direction.Down);
+  }
+
   @HostListener('window:keyup.arrowleft')
+  arrowLeft() {
+    this.scroll.disable();
+    this.moveLeft();
+    this.scroll.enable();
+  }
+
   moveLeft() {
     this.move(Direction.Left);
   }
 
   @HostListener('window:keyup.arrowright')
+  arrowRight() {
+    this.scroll.disable();
+    this.moveRight();
+    this.scroll.enable();
+  }
+
   moveRight() {
     this.move(Direction.Right);
   }

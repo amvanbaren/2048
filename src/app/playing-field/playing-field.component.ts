@@ -4,6 +4,7 @@ import * as Chance from 'chance';
 import { Point } from './point';
 import { Direction } from './direction';
 import { Matrix } from './matrix';
+import { Scroll } from './scroll';
 import { ScoreboardService } from '../score-board.service';
 import { PlayingFieldService } from '../playing-field.service';
 
@@ -18,8 +19,8 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
   private columns = 4;
   private scoreBoardService: ScoreboardService;
   private chance;
-  private matrix;
-
+  private matrix: Matrix;
+  private scroll: Scroll;
   private subscription: Subscription;
 
   gameOver: boolean;
@@ -30,6 +31,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     this.scoreBoardService = scoreBoardService;
     this.chance = new Chance();
     this.matrix = new Matrix();
+    this.scroll = new Scroll();
     this.subscription = playingFieldService.playingFieldReset$.subscribe(() => { this.reset(); });
   }
 
@@ -43,12 +45,16 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup.arrowup')
   moveUp() {
+    this.scroll.disable();
     this.move(Direction.Up);
+    this.scroll.enable();
   }
 
   @HostListener('window:keyup.arrowdown')
   moveDown() {
+    this.scroll.disable();
     this.move(Direction.Down);
+    this.scroll.enable();
   }
 
   @HostListener('window:keyup.arrowleft')
@@ -179,7 +185,7 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     randomTiles.forEach((p) => {
       const val = chance.integer({ min: 0, max: 9 }) === 0 ? 4 : 2;
 
-      this.tiles[p.getX()][p.getY()] = val;
+      this.tiles[p.x][p.y] = val;
     });
   }
 

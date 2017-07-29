@@ -1,7 +1,6 @@
 <div class="tile" [attr.tile]="tile">
-    <div class="container-overlay">
-        <div class="overlay-inner tile-inner" *ngIf="tile > 0">
-            {{tile}}
-        </div>
+    <div class="container-overlay" *ngIf="tile > 0">
+        <div class="hidden-xs overlay-inner tile-inner">{{tile}}</div>
+        <div class="visible-xs-inline overlay-inner tile-inner">{{tile}}</div>
     </div>
 </div>

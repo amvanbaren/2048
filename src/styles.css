@@ -1,11 +1,3 @@
-/* ROW */
-.row {
-    margin-bottom: 15px;
-}
-
-.row:last-child {
-    margin-bottom: 0;
-}
 
 /* OVERLAY */
 .overlay-container {

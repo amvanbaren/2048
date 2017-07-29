@@ -16,6 +16,8 @@ a {
 @font-family-base:        @font-family-sans-serif;
 
 @font-size-base:          18px;
+@font-size-h1:            80px;
+@font-size-h2:            60px;
 
 @headings-font-weight:    700;
 
@@ -26,9 +28,64 @@ a {
 @btn-default-border:      darken(@btn-default-bg, 5%);
 
 @grid-gutter-width:       15px;
+.gutter {
+    padding: @grid-gutter-width;
+}
+
+.row {
+    margin-bottom: @grid-gutter-width;
+}
+
+.row:last-child {
+    margin-bottom: 0;
+}
 
 @panel-bg:              #bbada0;
 .panel {
     color: @btn-default-color;
     border-color: @btn-default-border;
+}
+
+/* xs sizing */
+@media(max-width: @screen-xs-max) {
+    @grid-gutter-width: 10px;
+
+    .col-xs-loop(@counter) when (@counter > 0) {
+        .col-xs-loop((@counter - 1));    // next iteration
+        .col-xs-@{counter} {
+            padding-left: @grid-gutter-width / 2;
+            padding-right: @grid-gutter-width / 2;
+        }
+    }
+
+    .col-xs-loop(12);
+
+    .gutter {
+        padding: @grid-gutter-width;
+    }
+
+    .row {
+        @row-margin-left: floor(@grid-gutter-width / 2);
+        
+        margin-left: @row-margin-left * -1;
+        margin-right: (@grid-gutter-width - @row-margin-left) * -1;
+        margin-bottom: @grid-gutter-width;
+    }
+
+    @font-size-base: 15px;
+    html,
+    body,
+    .btn {
+        font-size: @font-size-base;
+    }
+
+    .h1,
+    h1 {
+        font-size: @font-size-h1 / 2;
+    }
+
+    .h2,
+    h2 {
+        font-size: @font-size-h2 / 2;
+    }
 }

@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import * as Chance from 'chance';
-import { Point } from './point';
 import { Direction } from './direction';
-import { Matrix } from './matrix';
 import { Scroll } from './scroll';
 import { ScoreboardService } from '../score-board.service';
 import { PlayingFieldService } from '../playing-field.service';
+import { PlayingFieldManager } from './playing-field.manager';
 
 @Component({
   selector: 'app-playing-field',
@@ -14,14 +12,10 @@ import { PlayingFieldService } from '../playing-field.service';
   styleUrls: ['./playing-field.component.css']
 })
 export class PlayingFieldComponent implements OnInit, OnDestroy {
-  private empty = 0;
-  private rows = 4;
-  private columns = 4;
   private scoreBoardService: ScoreboardService;
-  private chance;
-  private matrix: Matrix;
   private scroll: Scroll;
   private subscription: Subscription;
+  private manager: PlayingFieldManager;
 
   gameOver: boolean;
   gameWon: boolean;
@@ -29,10 +23,9 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
 
   constructor(scoreBoardService: ScoreboardService, playingFieldService: PlayingFieldService) {
     this.scoreBoardService = scoreBoardService;
-    this.chance = new Chance();
-    this.matrix = new Matrix();
     this.scroll = new Scroll();
     this.subscription = playingFieldService.playingFieldReset$.subscribe(() => { this.reset(); });
+    this.manager = new PlayingFieldManager();
   }
 
   ngOnInit() {
@@ -87,183 +80,16 @@ export class PlayingFieldComponent implements OnInit, OnDestroy {
     this.move(Direction.Right);
   }
 
+  private move(direction: Direction) {
+    this.tiles = this.manager.move(this.tiles, direction);
+    this.manager.gameOver(this.tiles);
+    this.gameOver = this.manager.gameOver(this.tiles);
+    this.gameWon = this.manager.gameWon(this.tiles);
+  }
+
   private reset() {
     this.gameOver = false;
     this.gameWon = false;
-    this.tiles = [];
-
-    Array.from(Array(this.rows), () => {
-      const tileRow = [];
-      Array.from(Array(this.columns), () => {
-        tileRow.push(this.empty);
-      });
-
-      this.tiles.push(tileRow);
-    });
-
-    this.addRandomTiles(2);
-  }
-
-  private move(direction: Direction) {
-    // copy tiles
-    let tiles: number[][] = [];
-    this.tiles.forEach(r => {
-      tiles.push(r.slice(0));
-    });
-
-    let degrees: number;
-    switch (direction) {
-      case Direction.Up:
-        degrees = 0;
-        break;
-      case Direction.Down:
-        degrees = 180;
-        break;
-      case Direction.Left:
-        degrees = 270;
-        break;
-      case Direction.Right:
-        degrees = 90;
-        break;
-    }
-
-    tiles = this.matrix.rotate(tiles, degrees);
-
-    // up
-    Array.from(Array(this.rows - 1), (r, i) => {
-      // start with the second row
-      const index = i + 1;
-      Array.from(Array(this.columns), (c, j) => {
-        let u;
-        // move tiles
-        for (u = 0; u < index; u++) {
-          if (tiles[u][j] === this.empty) {
-            const value = tiles[index][j];
-            tiles[index][j] = this.empty;
-            tiles[u][j] = value;
-            break;
-          }
-        }
-        // merge tiles
-        if (u > 0 && tiles[u - 1][j] === tiles[u][j]) {
-          const value = tiles[u - 1][j] * 2;
-          tiles[u - 1][j] = value;
-          tiles[u][j] = this.empty;
-
-          this.scoreBoardService.changeScore(value);
-        }
-      });
-    });
-
-    // rotate the tiles back
-    degrees = 360 - degrees;
-    tiles = this.matrix.rotate(tiles, degrees);
-
-    let equal = true;
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.columns; j++) {
-        if (this.tiles[i][j] !== tiles[i][j]) {
-          equal = false;
-          break;
-        }
-      }
-
-      if (!equal) {
-        break;
-      }
-    }
-
-    if (!equal) {
-      this.tiles.length = 0;
-      tiles.forEach(r => {
-        this.tiles.push(r.slice(0));
-      });
-
-      if (!this.hasWon()) {
-        this.addRandomTiles(1);
-      }
-    } else {
-      this.determinePossibleMoves();
-    }
-  }
-
-  private addRandomTiles(count: number) {
-    const emptyTiles = [];
-    this.tiles.forEach((r, i) => {
-      r.forEach((t, j) => {
-        if (t === this.empty) {
-          emptyTiles.push(new Point(i, j));
-        }
-      });
-    });
-
-    let randomTiles = this.chance.pick(emptyTiles, count);
-    if (!Array.isArray(randomTiles)) {
-      randomTiles = [randomTiles];
-    }
-
-    randomTiles.forEach((p) => {
-      const val = chance.integer({ min: 0, max: 9 }) === 0 ? 4 : 2;
-
-      this.tiles[p.x][p.y] = val;
-    });
-  }
-
-  private determinePossibleMoves() {
-    let playingFieldFull = true;
-
-    emptyTilesLoop:
-    for (const row of this.tiles) {
-      for (const column of row) {
-        if (column === this.empty) {
-          playingFieldFull = false;
-          break emptyTilesLoop;
-        }
-      }
-    }
-
-    if (playingFieldFull) {
-      let canMergeTiles = false;
-
-      const rows = this.rows - 1;
-      mergeTilesRowLoop:
-      for (let c = 0; c < this.columns; c++) {
-        for (let r = 0; r < rows; r++) {
-          if (this.tiles[r][c] === this.tiles[r + 1][c]) {
-            canMergeTiles = true;
-            break mergeTilesRowLoop;
-          }
-        }
-      }
-
-      if (!canMergeTiles) {
-        const columns = this.columns - 1;
-        mergeTilesColumnLoop:
-        for (let r = 0; r < this.rows; r++) {
-          for (let c = 0; c < columns; c++) {
-            if (this.tiles[r][c] === this.tiles[r][c + 1]) {
-              canMergeTiles = true;
-              break mergeTilesColumnLoop;
-            }
-          }
-        }
-      }
-
-      this.gameOver = !canMergeTiles;
-    }
-  }
-
-  private hasWon() {
-    const winningTile = 2048;
-
-    hasWonLoop:
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.columns; c++) {
-        if (this.tiles[r][c] == winningTile) {
-          this.gameWon = true;
-          break hasWonLoop;
-        }
-      }
-    }
+    this.tiles = this.manager.resetPlayingField();
   }
 }

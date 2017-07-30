@@ -1,3 +1,5 @@
+import { HammerConfig } from './hammer.config';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -32,7 +34,15 @@ import { NewGameService } from './new-game.service';
     HttpModule,
     BrowserAnimationsModule
   ],
-  providers: [ScoreboardService, PlayingFieldService, NewGameService],
+  providers: [
+    ScoreboardService,
+    PlayingFieldService,
+    NewGameService,
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

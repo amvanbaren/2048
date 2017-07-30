@@ -1,0 +1,19 @@
+.container-fluid {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.btn-align {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 0;
+    font-size: 18px;
+    line-height: 1.42857143;
+}
+
+hr {
+    border-color:#d8d4d0;
+}

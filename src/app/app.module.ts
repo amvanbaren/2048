@@ -1,7 +1,8 @@
 import { HammerConfig } from './hammer.config';
-
 import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -25,12 +26,13 @@ import { NewGameService } from './new-game.service';
     TileComponent,
     NewGameComponent,
     GameOverComponent,
-    GameWonComponent
+    GameWonComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    BrowserAnimationsModule
   ],
   providers: [
     ScoreboardService,

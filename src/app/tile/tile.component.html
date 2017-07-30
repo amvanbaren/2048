@@ -1,6 +1,12 @@
+<div class="tile-container panel">
+    <div class="panel tile" [@background]="tile.state"><!-- background --></div>
 <div class="tile" [attr.tile]="tile">
     <div class="container-overlay" *ngIf="tile > 0">
-        <div class="hidden-xs overlay-inner tile-inner">{{tile}}</div>
-        <div class="visible-xs-inline overlay-inner tile-inner">{{tile}}</div>
+        <div class="hidden-xs overlay-inner tile-inner"         [attr.tile]="tile.value" 
+        [@state]="tile.state">{{tile}}</div>
+        <div class="visible-xs-inline overlay-inner tile-inner"         [attr.tile]="tile.value" 
+        [@state]="tile.state">{{tile}}</div>
     </div>
 </div>
+
+

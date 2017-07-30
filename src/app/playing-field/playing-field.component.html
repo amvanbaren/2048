@@ -1,8 +1,7 @@
 <div id="playing-field" class="col-xs-12 gutter" (swipeleft)="moveLeft()" (swiperight)="moveRight()" (swipeup)="moveUp()" (swipedown)="moveDown()">
   <app-game-over *ngIf="gameOver"></app-game-over>
   <app-game-won *ngIf="gameWon"></app-game-won>
-  <div class="row" *ngFor="let tileRow of tiles">
-    <div class="col-xs-3" *ngFor="let tile of tileRow">
-      <app-tile [tile]="tile"></app-tile>
-    </div>
+  <div class="col-xs-3" *ngFor="let tile of [].concat.apply([], tiles);">
+    <app-tile [tile]="tile"></app-tile>
+  </div>
 </div>
